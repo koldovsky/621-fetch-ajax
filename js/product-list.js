@@ -1,45 +1,37 @@
-(function () {
-    const productsJson = `[
-        {
-            "id": "1",
-            "name": "Baby Yoda",
-            "description": "Lorem ipsum...",
-            "price": 9.99,
-            "imgUrl": "img/baby-yoda.svg"            
-        },
-        {
-            "id": "2",
-            "name": "Banana",
-            "description": "Lorem ipsum...",
-            "price": 8.99,
-            "imgUrl": "img/banana.svg"            
-        },
-        {
-            "id": "3",
-            "name": "Girl",
-            "description": "Lorem ipsum...",
-            "price": 7.99,
-            "imgUrl": "img/girl.svg"            
-        },
-        {
-            "id": "4",
-            "name": "Viking",
-            "description": "Lorem ipsum...",
-            "price": 6.99,
-            "imgUrl": "img/viking.svg"            
-        },
-        {
-            "id": "5",
-            "name": "Cat",
-            "description": "Lorem ipsum...",
-            "price": 8.99,
-            "imgUrl": "https://placekitten.com/200/139"            
-        }
-    ]`; 
+(async function () {
 
-    const products = JSON.parse(productsJson);
+    // Example with Promises:
+    // let products;
+    // fetch('products.json') 
+    //  .then( response => response.json() )
+    //  .then( productsData => {
+    //      products = productsData;
+    //      showProducts(products, 'original');
+    //  });
 
-    function showProducts(products, order) {
+    // Example 2 - AJAX
+    // let products;
+    // function getProductsAjax() {
+    //     const xhr = new XMLHttpRequest();
+    //     xhr.onreadystatechange = function() {
+    //         if (xhr.readyState === 4 && xhr.status === 200) {
+    //             products = JSON.parse(xhr.responseText);
+    //             showProducts();
+    //         }
+    //     }
+    //     xhr.open('GET', 'products.json', true);
+    //     xhr.send();
+    // }
+    // getProductsAjax();
+
+    let order = 'original';
+    const response = await fetch('products.json');
+    const products = await response.json();
+    showProducts();    
+
+    let rates;
+    function showProducts() {
+        const currency = document.querySelector('.currency').value;
         const sortedProducts = order === 'original' ? products
              : [...products].sort( (a, b) => order === 'asc' ? a.price - b.price : b.price - a.price);
         let productsHtml = '';
@@ -51,22 +43,38 @@
             <h5 class="card-title">${product.name}</h5>
             <p class="card-text">${product.description}</p>
             <a href="#" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#productInfo">Info</a>
-            <a href="#" class="btn btn-primary">${product.price} - Buy</a>
+            <a href="#" class="btn btn-primary">${convertCurrency(product.price, currency)} - Buy</a>
             </div>
         </article>`;
         }
         document.querySelector('main .products').innerHTML = productsHtml;
     }
-    showProducts(products, 'original') 
 
     document.querySelector('.sort-asc').addEventListener('click', sortAsc);
+
     function sortAsc() {
-        showProducts(products, 'asc') 
+        order = 'asc';
+        showProducts() 
     }
 
     document.querySelector('.sort-desc').addEventListener('click', sortDesc);
     function sortDesc() {
-        showProducts(products, 'desc') 
+        order = 'desc';
+        showProducts();
     }
 
+    async function getCurrencyRates() {
+        const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+        rates = await response.json();
+        document.querySelector('.currency').disabled = false;
+    }
+
+    function convertCurrency(priceUSD, convertTo) {
+        if (convertTo === 'USD') return priceUSD;
+        return (priceUSD * rates.rates[convertTo]).toFixed(2);
+    }
+
+    document.querySelector('.currency').addEventListener('change', showProducts );
+
+    getCurrencyRates();
 })();

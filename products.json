@@ -1,0 +1,37 @@
+[
+    {
+        "id": "1",
+        "name": "Baby Yoda",
+        "description": "Lorem ipsum...",
+        "price": 9.99,
+        "imgUrl": "img/baby-yoda.svg"            
+    },
+    {
+        "id": "2",
+        "name": "Banana",
+        "description": "Lorem ipsum...",
+        "price": 8.99,
+        "imgUrl": "img/banana.svg"            
+    },
+    {
+        "id": "3",
+        "name": "Girl",
+        "description": "Lorem ipsum...",
+        "price": 7.99,
+        "imgUrl": "img/girl.svg"            
+    },
+    {
+        "id": "4",
+        "name": "Viking",
+        "description": "Lorem ipsum...",
+        "price": 6.99,
+        "imgUrl": "img/viking.svg"            
+    },
+    {
+        "id": "5",
+        "name": "Cat",
+        "description": "Lorem ipsum...",
+        "price": 8.99,
+        "imgUrl": "https://placekitten.com/200/139"            
+    }
+]
